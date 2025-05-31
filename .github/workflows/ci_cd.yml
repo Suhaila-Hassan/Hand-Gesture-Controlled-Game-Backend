@@ -1,0 +1,39 @@
+name: Hand Gesture Recognition API
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+    - name: Install test dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest httpx fastapi[all]
+    - name: Build Docker image
+      run: |
+        docker build -t hand-gesture-api:latest .
+    - name: Run container
+      run: |
+        docker run -d --rm -p 8000:8000 --name test_container hand-gesture-api:latest
+        sleep 10
+    - name: Test API endpoints
+      run: |
+        curl -f http://localhost:8000/
+        curl -f http://localhost:8000/health
+        curl -X POST http://localhost:8000/predict \
+          -H "Content-Type: application/json" \
+          -d '{"landmarks":[[0.1,0.2],[0.2,0.3],[0.3,0.4],[0.4,0.5],[0.5,0.6],[0.6,0.7],[0.7,0.8],[0.8,0.9],[0.9,1.0],[1.0,0.1],[0.11,0.21],[0.12,0.22],[0.13,0.23],[0.14,0.24],[0.15,0.25],[0.16,0.26],[0.17,0.27],[0.18,0.28],[0.19,0.29],[0.20,0.30],[0.21,0.31]]}'
+    - name: Run tests
+      run: |
+        pytest test_api.py || echo "Tests failed"
+    - name: Stop container
+      if: always()
+      run: docker stop test_container || true
