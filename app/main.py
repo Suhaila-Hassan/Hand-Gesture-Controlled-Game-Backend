@@ -153,3 +153,7 @@ def predict_landmarks(request: LandmarkRequest):
         # Log the error and increment error counter
         print(f"Prediction error: {str(e)}")
         return {"label": None, "error": f"Prediction failed: {str(e)}"}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
