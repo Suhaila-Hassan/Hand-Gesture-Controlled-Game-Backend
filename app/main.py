@@ -64,7 +64,6 @@ PREDICTED_GESTURES = PromCounter(
     ["gesture"]
 )
 
-# Additional useful metrics
 SUCCESSFUL_PREDICTIONS = PromCounter(
     "successful_predictions_total",
     "Total number of successful predictions"
@@ -133,9 +132,6 @@ def predict_landmarks(request: LandmarkRequest):
         gesture_history.append(label)
         gesture_counts = Counter(gesture_history)
         gesture = gesture_counts.most_common(1)[0][0]
-        
-        # Calculate gesture stability (how consistent recent predictions are)
-        gesture_stability = gesture_counts[gesture] / len(gesture_history)
 
         label_map = {
             "like": "up",
@@ -157,14 +153,3 @@ def predict_landmarks(request: LandmarkRequest):
         # Log the error and increment error counter
         print(f"Prediction error: {str(e)}")
         return {"label": None, "error": f"Prediction failed: {str(e)}"}
-
-# Optional: Add endpoint to get current metrics summary
-@app.get("/metrics/summary")
-def metrics_summary():
-    """Return a human-readable summary of current metrics"""
-    return {
-        "total_requests": "Check /metrics for current count",
-        "model_status": "loaded" if model is not None else "not loaded",
-        "gesture_history_length": len(gesture_history),
-        "available_gestures": ["up", "down", "left", "right"]
-    }
