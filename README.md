@@ -1,4 +1,4 @@
-# Hand Gesture Controlled Game - Game
+# Hand Gesture Controlled Game - Backend/API
 
 ### Monitoring using Grafana and Prometheus
 Following metrics were chosen to monitor backend/API performance:
