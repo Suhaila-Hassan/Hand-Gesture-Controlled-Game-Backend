@@ -1,5 +1,8 @@
 # Hand Gesture Controlled Game - Backend/API
 
+### Deployed API
+![Deployed API Link](https://github.com/user-attachments/assets/5ea517a7-7cfe-4e05-8d90-d3239e6bdd66)
+
 ### Monitoring using Grafana and Prometheus
 Following metrics were chosen to monitor backend/API performance:
 
